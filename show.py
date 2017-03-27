@@ -22,6 +22,9 @@ class Show(object):
     def getCategories(self):   
         return self.categories
     
+    def getRoundNumberLeft(self, qs):
+        return len(qs[(qs.show == self.show)  & (qs.q_type == self.level) & (qs.completed == 0)])    
+    
     def completeShow(self, complete):
         self.finished = 1
         

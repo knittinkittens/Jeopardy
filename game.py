@@ -47,39 +47,43 @@ def main():
     
     seed = randint(0, len(qs.show.unique()))
     show = Show(list(qs.show.unique())[seed], qs)
-    print('\nYour Round 1 categories are: \n\t', '\n\t'.join(list(show.getCategories())))
-    cat = input("Please pick a category: ")
-    cat = Category(show, cat, qs)
-    question = input('Please pick a question value from: \n\t' + '\n\t'.join(list(map(str, cat.getValues()))) + '\n')
     
-    question = int(question)
-    question = Question(cat, question, qs)
-    print(question.getText())
+    while(show.getRoundNumberLeft(qs) > 0):
+        print('\nYour Round 1 categories are: \n\t', '\n\t'.join(list(show.getCategories())))
+        cat = input("Please pick a category: ")
+        cat = Category(show, cat, qs)
     
-    response = None
-    buzz = threading.Thread(target=user_buzz)
-    buzz.daemon = True
-    buzz.start()
-    buzz.join(10)
-    if response is None:
-        print('You missed this question :(')
-        print('\nThe correct answer is: {0}'.format(question.getAnswer()))
-    else:
-        answer = None
-        ans = threading.Thread(target=user_answer)
-        ans.daemon = True
-        ans.start()
-        ans.join(10)
-        if answer != question.getAnswer():
-            user.subtractPoints(question.getValue())
-            print("That answer is incorrect.\nThe correct answer is: {0}".format(question.getAnswer()))
+        print(cat.getNumberLeft(qs))
+        question = input('Please pick a question value from: \n\t' + '\n\t'.join(list(map(str, cat.getValues()))) + '\n')
+        
+        question = int(question)
+        question = Question(cat, question, qs)
+        print(question.getText())
+        
+        response = None
+        buzz = threading.Thread(target=user_buzz)
+        buzz.daemon = True
+        buzz.start()
+        buzz.join(10)
+        if response is None:
+            print('You missed this question :(')
+            print('\nThe correct answer is: {0}'.format(question.getAnswer()))
         else:
-            user.addPoints(question.getValue())
-            print("Correct!")
-
-    question.completeQuestion(1, qs, cat)
-    cat.setQuestions(qs)
-    cat.setValues(qs)
+            answer = None
+            ans = threading.Thread(target=user_answer)
+            ans.daemon = True
+            ans.start()
+            ans.join(10)
+            if answer != question.getAnswer():
+                user.subtractPoints(question.getValue())
+                print("That answer is incorrect.\nThe correct answer is: {0}".format(question.getAnswer()))
+            else:
+                user.addPoints(question.getValue())
+                print("Correct!")
+    
+        question.completeQuestion(1, qs, cat)
+        cat.setQuestions(qs)
+        cat.setValues(qs)
 
         
         

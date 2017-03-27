@@ -35,7 +35,7 @@ class Category(Show):
         return len(qs[(qs.show == self.show) & (qs.categories == self.name) & (qs.completed == 0)])
     
     def setQuestions(self, qs):
-        self.questions = list(qs[(qs.show == self.show) & (qs.categories == self.name) & (qs.completed == 0)])
+        self.questions = list(qs[(qs.show == self.show) & (qs.categories == self.name) & (qs.completed == 0)].index.unique())
         
     def setValues(self, qs):
         self.values = list(qs[(qs.show == self.show) & (qs.categories == self.name) & (qs.completed == 0)].clue_value.unique())

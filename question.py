@@ -25,7 +25,7 @@ class Question(Category):
         return self.q_text
     
     def completeQuestion(self, complete, qs, cats):
-        qs[(qs.index.isin(cats.getQuestionIndexes())) & (qs.clue_value == self.q_value)]['completed'] = 1
+        qs.ix[(qs.index.isin(cats.getQuestionIndexes())) & (qs.clue_value == self.q_value), 'completed'] = 1
         
     def getAnswer(self):
         return self.q_answer
